@@ -1,0 +1,46 @@
+0000	COPY   START 0
+0000	FIRST  STL   RETADR
+0003	       LDB  #LENGTH
+    	       BASE  LENGTH
+0006	ENDFIL LDA   EOF
+0009	       STA   BUFFER
+000C	       LDA  #3
+000F	       STA   LENGTH
+0012	      +JSUB  WRREC
+0016	       J    @RETARD
+0019	EOF    BYTE  C'EOF'
+001C	RETARD RESW  1
+001F	LENGTH RESW  1
+0022	BUFFER RESB  4096
+    	.
+    	.      this is comment line
+    	.
+1022	RDREC  CLEAR X
+1024	       CLEAR A
+1026	       CLEAR S
+1028	      +LDT  #4096
+102C	RLOOP  TD    INPUT
+102F	       JEQ   RLOOP
+1032	       RD    INPUT
+1035	       COMPR A,S
+1037	       JEQ   EXIT
+103A	       STCH  BUFFER,X
+103D	       TIXR  T
+103F	       JLT   RLOOP
+1042	EXIT   STX   LENGTH
+1045	       RSUB
+1048	INPUT  BYTE  X'F1'
+    	.
+    	.      I am comment line.
+    	.
+1049	WRREC  CLEAR X
+104B	       LDT   LENGTH
+104E	WLOOP  TD    OUTPUT
+1051	       JEQ   WLOOP
+1054	       LDCH  BUFFER,X
+1057	       WD    OUTPUT
+105A	       TIXR  T
+105C	       JLT   WLOOP
+105F	       RSUB
+1062	OUTPUT BYTE  X'05'
+    	       END   FIRST
